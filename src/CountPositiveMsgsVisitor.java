@@ -1,17 +1,42 @@
-import java.util.Map;
-import java.util.HashMap;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 
 public class CountPositiveMsgsVisitor implements ComponentVisitor {
-	private static Map <String, Integer> postiveWords;
-	
+	private static ArrayList <String> postiveWords;
+	private int positiveMsgCount;
+	private int totalMsgCount;
 	public CountPositiveMsgsVisitor(){
-		postiveWords = new HashMap<String, Integer>();
-		postiveWords.put("excellent",0);
-		postiveWords.put("good",0);
-		postiveWords.put("fantastic",0);
+		postiveWords = new ArrayList<String>();
+		postiveWords.add("excellent");
+		postiveWords.add("good");
+		postiveWords.add("fantastic");
+		postiveWords.add("great");
+		
+		positiveMsgCount=0;
 	}
 	
-	pub
 	
+	public void summerize(UserComponent c){
+		 ArrayList <TwitMessage> newsFeeds =  new ArrayList<TwitMessage>();
+		 if (c instanceof User){
+			 newsFeeds = ((User) c).getNewsFeeds();
+			 totalMsgCount += Array.getLength(newsFeeds);
+			 
+			 for (TwitMessage m: newsFeeds){		 
+				 for (String p:postiveWords){
+					 if (m.getMessage().toLowerCase().contains(p.toLowerCase())){
+						 positiveMsgCount++;
+						 break;
+					 }
+				 }
+			 }
+		 }
+	 }
+	
+	public void showResult(){
+		float result = (float)positiveMsgCount/totalMsgCount;
+		System.out.println(String.valueOf(result));
+	}
 	
 }

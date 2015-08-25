@@ -3,11 +3,11 @@ public class UserGroup implements UserComponent {
 	private String id;
 	private ArrayList <UserComponent> components;
 	
-	
 	public UserGroup (String id){
 		this.id = id;
 		this.components = null;
 	}
+	
 	@Override
 	public String getComponentID(){
 		return this.id;
@@ -17,7 +17,13 @@ public class UserGroup implements UserComponent {
 		components.add(c);
 	}
 
-	public T accept(IVisitor visitor, T state);
+	@Override
+	public void accept(ComponentVisitor visitor){
+		for (UserComponent c : components){
+			visitor.summerize(c);
+		}
+		
+	}
 	
 	
 }

@@ -1,15 +1,20 @@
 
 public class TwitMessage {
-	private User user;
+	private String id;
 	private String message;
 	
-	public TwitMessage(User u, String m){
-		this.user = u;
+	public TwitMessage(String userID, String m){
+		this.id = userID;
 		this.message = m;
 	}
 	
-	public void print(){
-		System.out.println(user.getComponentID()+": "+message);
+	
+	public String getUserID(){
+		return this.id;
+	}
+	
+	public String getMessage(){
+		return this.message;
 	}
 	
 }

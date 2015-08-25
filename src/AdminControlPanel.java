@@ -12,9 +12,9 @@ public class AdminControlPanel extends JFrame {
 	private JButton btnAddUser, btnAddGroup, btnOpenUserView;
 	private JButton btnShowUserTotal, btnShowGroupTotal, btnShowMessagesTotal, btnShowPosPercentage;
 	
-
-
-	public AdminControlPanel(){
+	private static AdminControlPanel instance = null;
+	
+	private AdminControlPanel(){
 		treeViewArea = new JTextArea(15,15);		
 		entryUserID = new JTextField("User ID");
 		entryGroupID =new JTextField("Group ID");
@@ -92,7 +92,7 @@ public class AdminControlPanel extends JFrame {
 		c.gridx = 1;
 		c.gridy = 0;
 		statPanel.add (btnShowGroupTotal,c);
-		
+		btnShowGroupTotal.addActionListener(new CountGroupVisitor());
 		//define constrains for Show Message Total button
 		c.gridx = 0;
 		c.gridy = 1;
@@ -108,11 +108,19 @@ public class AdminControlPanel extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	
+	public static AdminControlPanel getInstance(){
+		if (instance == null){
+			instance = new AdminControlPanel();
+		}
+		return instance;
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					 AdminControlPanel mypanel = new AdminControlPanel();
+					 AdminControlPanel mypanel = AdminControlPanel.getInstance();
 					 mypanel.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

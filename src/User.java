@@ -5,26 +5,31 @@ import java.util.Observer;
 public class User extends Observable implements UserComponent{
 	private String id;
 	private ArrayList <User> followers;
-	private ArrayList <User> followings;
-	private ArrayList <String> twitMessages;
-	
-	
-	
+	protected ArrayList <User> followings;
+	private ArrayList <TwitMessage> selfMessages;
+	protected ArrayList <TwitMessage> followingMsgs;
 	
 	@Override
 	public String getComponentID(){
 		return this.id;
 	}
 	
+	public void twitaMessage(String messageString){
+		TwitMessage message = new TwitMessage(this, messageString);
+		selfMessages.add(message);
+		followingMsgs.add(message);
+		this.notifyObservers();
+	}
+	
+
+	
+	
+	
 	@Override
 	public void addObserver(Observer o){
 		followers.add((User) o);
 	}
 	
-	@Override
-	public void deleteObserver(Observer o){
-		followers.remove((User) o);
-	}
 	
 	@Override
 	public void deleteObserver(Observer o){

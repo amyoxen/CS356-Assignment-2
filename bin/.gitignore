@@ -1,7 +1,11 @@
 /AdminControlPanel$1.class
 /AdminControlPanel.class
 /ComponentVisitor.class
+/CountGroupVisitor.class
+/CountMessageVisitor.class
 /CountPositiveMsgsVisitor.class
+/CountUserVisitor.class
+/Driver.class
 /Follower.class
 /TwitMessage.class
 /User.class
@@ -9,7 +13,5 @@
 /UserGroup.class
 /UserViewPanel$1.class
 /UserViewPanel.class
-/Driver.class
-/CountUserVisitor.class
-/CountGroupVisitor.class
-/CountMessageVisitor.class
+/Subject.class
+/Observer.class

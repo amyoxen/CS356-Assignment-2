@@ -1,21 +1,25 @@
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
-public class AdminControlPanel extends JFrame {
+public class AdminControlPanel extends JPanel implements TreeSelectionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JTextArea treeViewArea;
+	private JScrollPane treeViewPanel;
 	private JTextField entryUserID, entryGroupID;
 	private JButton btnAddUser, btnAddGroup, btnOpenUserView;
 	private JButton btnShowUserTotal, btnShowGroupTotal, btnShowMessagesTotal, btnShowPosPercentage;
+	private JTree userTree;
 	
 	private static AdminControlPanel instance = null;
 	
 	private AdminControlPanel(){
-		treeViewArea = new JTextArea(15,15);		
+		//treeViewArea = new JTextArea(15,15);	
+		treeViewPanel = new JScrollPane();
 		entryUserID = new JTextField("User ID");
 		entryGroupID =new JTextField("Group ID");
 		btnAddUser = new JButton("Add User");
@@ -27,12 +31,12 @@ public class AdminControlPanel extends JFrame {
 		btnShowPosPercentage = new JButton("Show Positive Percentage");
 			
         setFont(new Font("SansSerif", Font.PLAIN, 14)); 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100,100,550,300);
         
 		setLayout(new BorderLayout());
 		
-		JPanel treeViewPanel = new JPanel();
+		//getContentPane().JPanel treeViewPanel = new JPanel();
 		JPanel inputPanel = new JPanel();
 		JPanel userPanel = new JPanel();
 		JPanel statPanel = new JPanel();
@@ -43,12 +47,21 @@ public class AdminControlPanel extends JFrame {
 		add(inputPanel,BorderLayout.EAST);
 		inputPanel.add(userPanel, BorderLayout.NORTH);
 		inputPanel.add(statPanel, BorderLayout.SOUTH);
-		treeViewPanel.add(treeViewArea);
-		
+		//treeViewPanel.add(treeViewArea);
 		inputPanel.setPreferredSize(new Dimension(300,300));
 		
-		treeViewArea.setPreferredSize(new Dimension(120,200));
-		treeViewArea.setLineWrap(true);
+		
+		UserGroup root = new UserGroup("root");
+		userTree = new JTree(root);
+		//createNodes(root);
+		
+		
+		treeViewPanel.getViewport().add(userTree);
+		add(treeViewPanel);
+		
+		
+		//treeViewArea.setPreferredSize(new Dimension(120,200));
+		//treeViewArea.setLineWrap(true);
 		
         GridBagConstraints c = new GridBagConstraints();
         userPanel.setLayout(new GridBagLayout());
@@ -105,6 +118,11 @@ public class AdminControlPanel extends JFrame {
 		
 	}
 	
+	private void createNodes(UserGroup root) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * Launch the application.
 	 */
@@ -127,6 +145,18 @@ public class AdminControlPanel extends JFrame {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		// TODO Auto-generated method stub
+		UserGroup node = (UserGroup)userTree.getLastSelectedPathComponent();
+		if (node==null){
+			return;
+		}
+		Object nodeInfo = node.getUserObject();
+		
+		
 	}
 	
 }

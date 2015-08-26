@@ -1,11 +1,19 @@
 import java.util.ArrayList;
-public class UserGroup implements UserComponent {
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+public class UserGroup extends DefaultMutableTreeNode implements UserComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private ArrayList <UserComponent> components;
 	
 	public UserGroup (String id){
+		super(id);
 		this.id = id;
-		this.components = null;
+		this.components = new ArrayList <UserComponent>();
 	}
 	
 	@Override
@@ -14,6 +22,10 @@ public class UserGroup implements UserComponent {
 	}
 	
 	public void addComponent(UserComponent c) {
+		if (c instance of User){
+			
+		}
+		this.add(c);
 		components.add(c);
 	}
 

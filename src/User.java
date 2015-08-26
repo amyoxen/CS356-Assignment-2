@@ -1,8 +1,11 @@
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import javax.swing.tree.DefaultMutableTreeNode;
 
-public class User extends Observable implements UserComponent{
+public class User extends DefaultMutableTreeNode implements Subject, UserComponent{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String id;
 	protected ArrayList <Follower> followers;
 	protected ArrayList <User> followings;
@@ -32,22 +35,23 @@ public class User extends Observable implements UserComponent{
 		this.notifyObservers(message);
 	}
 	
-	
 	@Override
-	public void addObserver(Observer o){
+	public void registerObserver(Observer o) {
 		followers.add((Follower) o);
 	}
-	
+
 	@Override
-	public void deleteObserver(Observer o){
+	public void removeObserver(Observer o) {
 		followers.remove((User) o);
 	}
-	
+
 	@Override
 	public void notifyObservers(Object message) {
 		for (Follower f: followers){
-			f.update(this, message);
-		}	
+			if (message instanceof TwitMessage){
+			f.update(this, (TwitMessage)message);
+			}
+		}		
 	}
 	
 	@Override
@@ -61,5 +65,8 @@ public class User extends Observable implements UserComponent{
 		}
 		
 	}
+
+	
+
 }
 	

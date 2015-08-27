@@ -1,8 +1,12 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
-
+/**visitor to count the % of positive messages.
+ * 
+ */
 public class CountPositiveMsgsVisitor implements ComponentVisitor {
+	
+	//Use a string array to store the postive words.
 	private static ArrayList <String> postiveWords;
 	private int positiveMsgCount;
 	private int totalMsgCount;
@@ -16,13 +20,13 @@ public class CountPositiveMsgsVisitor implements ComponentVisitor {
 		positiveMsgCount=0;
 	}
 	
-	
-	public void summerize(UserComponent c){
+	@Override
+	public void examine(UserComponent c){
 		 ArrayList <TwitMessage> newsFeeds =  new ArrayList<TwitMessage>();
 		 if (c instanceof User){
 			 newsFeeds = ((User) c).getNewsFeeds();
-			 totalMsgCount += Array.getLength(newsFeeds);
-			 
+			 totalMsgCount += newsFeeds.size();
+			 //Compare the strings in each news feed.
 			 for (TwitMessage m: newsFeeds){		 
 				 for (String p:postiveWords){
 					 if (m.getMessage().toLowerCase().contains(p.toLowerCase())){
@@ -34,9 +38,13 @@ public class CountPositiveMsgsVisitor implements ComponentVisitor {
 		 }
 	 }
 	
-	public void showResult(){
-		float result = (float)positiveMsgCount/totalMsgCount;
-		System.out.println(String.valueOf(result));
+	public float showResults() {
+		if (totalMsgCount == 0){
+			JOptionPane.showMessageDialog(null, "No Input Message Yet!");
+			return 0;
+		}
+
+		return (float)positiveMsgCount/totalMsgCount*100;
 	}
 	
 }

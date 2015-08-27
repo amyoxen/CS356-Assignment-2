@@ -1,5 +1,7 @@
-
+/**This is the interface for visitors.
+ * 
+ */
 abstract interface ComponentVisitor {
-	public void summerize(UserComponent c);
+	public void examine(UserComponent c);
 }
 

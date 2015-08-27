@@ -1,14 +1,16 @@
-import java.lang.reflect.Array;
-
+/**visitor to count the total of messages.
+ * 
+ */
 public class CountMessageVisitor implements ComponentVisitor {
 	private int messageTotal;
 	 public CountMessageVisitor(){
 		 messageTotal=0;
 	 }
 	 
-	 public void summerize(UserComponent c){
+	 @Override
+	 public void examine(UserComponent c){
 		 if (c instanceof User){
-			 messageTotal += Array.getLength(((User) c).getNewsFeeds());
+			 messageTotal += ((User) c).getNewsFeeds().size();
 		 }
 	 }
 	 

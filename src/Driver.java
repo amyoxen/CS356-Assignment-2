@@ -1,16 +1,21 @@
+/**Drive class
+ * 
+ */
+import java.awt.EventQueue;
 
 public class Driver {
-
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
-		User aa = new User("fsdfsdf");
-		Follower bb = new Follower("bb");
-		
-		bb.addFollwings(aa);
-		aa.twitaMessage("dd");
-		bb.twitaMessage("dfd");
-		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					 AdminControlPanel mypanel = AdminControlPanel.getInstance();
+					 mypanel.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }

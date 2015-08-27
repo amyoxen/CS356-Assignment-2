@@ -1,4 +1,6 @@
-
+/** Construct a TwitMessage Group to store message info.
+* 
+*/
 public class TwitMessage {
 	private String id;
 	private String message;

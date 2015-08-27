@@ -1,25 +1,34 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
 
-public class AdminControlPanel extends JPanel implements TreeSelectionListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+/**This class is to generate the Admin Control Panel. 
+ * Singleton is implemented to the class.
+ * 
+ */
+public class AdminControlPanel extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
+	//construct the tree
+	final UserGroup root = new UserGroup("root");	
+	private JTree userTree;
+	private DefaultTreeModel treeModel;
+	//the panel components declaration
 	private JScrollPane treeViewPanel;
 	private JTextField entryUserID, entryGroupID;
 	private JButton btnAddUser, btnAddGroup, btnOpenUserView;
 	private JButton btnShowUserTotal, btnShowGroupTotal, btnShowMessagesTotal, btnShowPosPercentage;
-	private JTree userTree;
-	
+	//Single instance
 	private static AdminControlPanel instance = null;
 	
-	private AdminControlPanel(){
-		//treeViewArea = new JTextArea(15,15);	
-		treeViewPanel = new JScrollPane();
+	private AdminControlPanel(){	
 		entryUserID = new JTextField("User ID");
 		entryGroupID =new JTextField("Group ID");
 		btnAddUser = new JButton("Add User");
@@ -29,40 +38,35 @@ public class AdminControlPanel extends JPanel implements TreeSelectionListener {
 		btnShowGroupTotal = new JButton("Show Group Total");
 		btnShowMessagesTotal = new JButton("Show Messages Total");
 		btnShowPosPercentage = new JButton("Show Positive Percentage");
-			
-        setFont(new Font("SansSerif", Font.PLAIN, 14)); 
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100,100,550,300);
-        
-		setLayout(new BorderLayout());
 		
-		//getContentPane().JPanel treeViewPanel = new JPanel();
+		//Setup the fram parameters.
+        setFont(new Font("SansSerif", Font.PLAIN, 14)); 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100,100,550,300);
+        Container myPane = this.getContentPane();
+        myPane.setLayout(new BoxLayout(myPane,BoxLayout.X_AXIS));
+		
+		//Setup the treeViewPanel
+		treeModel = new DefaultTreeModel(root);
+		treeModel.setAsksAllowsChildren (true);  
+		userTree = new JTree(treeModel);
+		treeViewPanel = new JScrollPane(userTree);
+		
+		//Setup the panel layout
 		JPanel inputPanel = new JPanel();
 		JPanel userPanel = new JPanel();
 		JPanel statPanel = new JPanel();
+		JPanel leftPanel = new JPanel(new BorderLayout());		
+        leftPanel.add(treeViewPanel);
+        treeViewPanel.setMinimumSize(new Dimension(150, 300));
+		myPane.add(leftPanel);
 		
 		inputPanel.setLayout(new BorderLayout());
-		
-		add(treeViewPanel, BorderLayout.WEST);
-		add(inputPanel,BorderLayout.EAST);
+		myPane.add(inputPanel);
 		inputPanel.add(userPanel, BorderLayout.NORTH);
 		inputPanel.add(statPanel, BorderLayout.SOUTH);
-		//treeViewPanel.add(treeViewArea);
 		inputPanel.setPreferredSize(new Dimension(300,300));
-		
-		
-		UserGroup root = new UserGroup("root");
-		userTree = new JTree(root);
-		//createNodes(root);
-		
-		
-		treeViewPanel.getViewport().add(userTree);
-		add(treeViewPanel);
-		
-		
-		//treeViewArea.setPreferredSize(new Dimension(120,200));
-		//treeViewArea.setLineWrap(true);
-		
+	
         GridBagConstraints c = new GridBagConstraints();
         userPanel.setLayout(new GridBagLayout());
         
@@ -105,7 +109,7 @@ public class AdminControlPanel extends JPanel implements TreeSelectionListener {
 		c.gridx = 1;
 		c.gridy = 0;
 		statPanel.add (btnShowGroupTotal,c);
-		btnShowGroupTotal.addActionListener(new CountGroupVisitor());
+		
 		//define constrains for Show Message Total button
 		c.gridx = 0;
 		c.gridy = 1;
@@ -114,49 +118,106 @@ public class AdminControlPanel extends JPanel implements TreeSelectionListener {
 		//define constrains for Show Positive Percentage button
 		c.gridx = 1;
 		c.gridy = 1;
-		statPanel.add (btnShowPosPercentage,c);
+		statPanel.add (btnShowPosPercentage,c);	
 		
-	}
-	
-	private void createNodes(UserGroup root) {
-		// TODO Auto-generated method stub
+		//Adding action listener for buttons.
+		btnOpenUserView.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if (userTree.getLastSelectedPathComponent()==null){
+					JOptionPane.showMessageDialog(null, "Please select a component.");
+					return;
+				}	else if(((UserComponent) userTree.getLastSelectedPathComponent()).setNodeIdentity()){
+					JOptionPane.showMessageDialog(null, "Please select a User. ");
+					} else {
+						Follower selectedUser = (Follower)(userTree.getLastSelectedPathComponent());
+						selectedUser.userPanel = new UserViewPanel(selectedUser, root);
+						selectedUser.userPanel.setVisible(true); 
+					}
+			}		
+		});
 		
-	}
+		btnAddUser.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				UserGroup group = null;
+				String id = entryUserID.getText();
+				if (userTree.getLastSelectedPathComponent()==null){
+					JOptionPane.showMessageDialog(null, "Please select a component.");
+					return;
+				}
+				
+				if(((UserComponent) userTree.getLastSelectedPathComponent()).setNodeIdentity()){
+					group = (UserGroup) userTree.getLastSelectedPathComponent();
+					}
+				else {
+					group = ((User)(userTree.getLastSelectedPathComponent())).getParent();
+				}			
+				Follower addUser = new Follower(id);
+				addUser.setNodeIdentity();
+				group.addComponent(addUser);
+				treeModel.reload(group);
+			}
+		});
 
-	/**
-	 * Launch the application.
-	 */
+		btnAddGroup.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if (userTree.getLastSelectedPathComponent()==null){
+					JOptionPane.showMessageDialog(null, "Please select a component.");
+					return;
+				}
+				UserGroup group = null;
+				String id = entryGroupID.getText();
+				if(((UserComponent) userTree.getLastSelectedPathComponent()).setNodeIdentity()){
+					group = (UserGroup) userTree.getLastSelectedPathComponent();
+					}
+				else {
+					group = ((User)(userTree.getLastSelectedPathComponent())).getParent();
+				}
+				
+				UserGroup addGroup = new UserGroup(id);
+				addGroup.setNodeIdentity();
+				group.addComponent(addGroup);
+				treeModel.reload(group);
+			}
+		});	
+		
+		btnShowGroupTotal.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				CountGroupVisitor v =new CountGroupVisitor();
+				root.accept(v);
+				JOptionPane.showMessageDialog(null, "Total number of groups: " + String.valueOf(v.showResults()));
+			}
+		});
+		
+		btnShowUserTotal.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				CountUserVisitor v =new CountUserVisitor();
+				root.accept(v);
+				JOptionPane.showMessageDialog(null, "Total number of Users: " + String.valueOf(v.showResults()));
+			}
+		});
+		
+		btnShowMessagesTotal.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				CountMessageVisitor v =new CountMessageVisitor();
+				root.accept(v);
+				JOptionPane.showMessageDialog(null, "Total number of NewsFeeds: " + String.valueOf(v.showResults()));
+			}
+		});
+		
+		btnShowPosPercentage.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				CountPositiveMsgsVisitor v =new CountPositiveMsgsVisitor();
+				root.accept(v);
+				JOptionPane.showMessageDialog(null, "Percentage of Positive Messages: " + String.valueOf(v.showResults())+"%");
+			}
+		});
+}
 	
+	//Singleton Pattern for Admin Control Panel.
 	public static AdminControlPanel getInstance(){
 		if (instance == null){
 			instance = new AdminControlPanel();
 		}
 		return instance;
 	}
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					 AdminControlPanel mypanel = AdminControlPanel.getInstance();
-					 mypanel.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	@Override
-	public void valueChanged(TreeSelectionEvent e) {
-		// TODO Auto-generated method stub
-		UserGroup node = (UserGroup)userTree.getLastSelectedPathComponent();
-		if (node==null){
-			return;
-		}
-		Object nodeInfo = node.getUserObject();
-		
-		
-	}
-	
 }

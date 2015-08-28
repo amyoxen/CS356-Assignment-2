@@ -5,6 +5,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * 
  */
 public class UserGroup extends DefaultMutableTreeNode implements UserComponent {
+	
 	private static final long serialVersionUID = 1L;
 	private ArrayList <UserComponent> components;
 	

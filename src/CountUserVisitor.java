@@ -2,6 +2,7 @@
  * 
  */
 public class CountUserVisitor implements ComponentVisitor {
+	
 		private int userTotal;
 		 public CountUserVisitor(){
 			 userTotal=0;

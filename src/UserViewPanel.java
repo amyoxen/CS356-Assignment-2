@@ -106,7 +106,7 @@ public class UserViewPanel extends JFrame {
 				return;
 			}
 			
-			((User)v.returnUser()).registerObserver((Follower)user);
+			((User)v.returnUser()).registerObserver(user);
 			user.printFollowings();			
 		}
 	});	

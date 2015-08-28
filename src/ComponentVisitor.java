@@ -2,6 +2,7 @@
  * 
  */
 abstract interface ComponentVisitor {
+	
 	public void examine(UserComponent c);
 }
 

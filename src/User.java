@@ -5,9 +5,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 *   Composite pattern is implemented. 
 *   Observation pattern is implemented.
 */
-public abstract class User extends DefaultMutableTreeNode implements UserComponent, Subject{
+public class User extends DefaultMutableTreeNode implements UserComponent, Subject, Observer{
+	
 	private static final long serialVersionUID = 1L;
-	protected ArrayList <Follower> followers;
+	protected ArrayList <User> followers;
 	protected ArrayList <User> followings;
 	protected ArrayList <TwitMessage> newsFeeds;
 	
@@ -16,7 +17,7 @@ public abstract class User extends DefaultMutableTreeNode implements UserCompone
 		
 	public User(String id){
 		super(id);
-		this.followers=new ArrayList<Follower>();
+		this.followers=new ArrayList<User>();
 		this.followings =new ArrayList<User>();
 		this.newsFeeds = new ArrayList <TwitMessage>();
 	}
@@ -74,15 +75,15 @@ public abstract class User extends DefaultMutableTreeNode implements UserCompone
 	//Observer override functions
 	@Override
 	public void registerObserver(Observer o) {
-		if(o instanceof Follower){
+		if(o instanceof User){
 			//To avoid adding the same follower in the followers list.
-			for(Follower i: followers){
-				if (i.getComponentID().equals(((Follower)o).getComponentID())){
+			for(User i: followers){
+				if (i.getComponentID().equals(((User)o).getComponentID())){
 					return;
 				}
 			}
-			this.followers.add((Follower) o);
-			((Follower)o).addFollowing(this);
+			this.followers.add((User) o);
+			((User)o).addFollowing(this);
 		}
 	}
 	
@@ -93,11 +94,26 @@ public abstract class User extends DefaultMutableTreeNode implements UserCompone
 	
 	@Override
 	public void notifyObservers(TwitMessage message) {
-		for (Follower f: followers){		
+		for (User f: followers){		
 			f.update(this, message);
 		}		
 	}
-	
-	
+	/**Create a follower ground to implement observer.
+	 * 
+	**/
+
+	public void addFollowing(User s){
+				followings.add(s);
+		}
+
+	@Override
+	public void update(Subject s, TwitMessage m) {
+			if (s instanceof User){
+				this.newsFeeds.add(m);
+				this.printNewsFeed();
+			}
+		}
 }
+
+
 	

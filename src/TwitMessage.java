@@ -2,6 +2,7 @@
 * 
 */
 public class TwitMessage {
+	
 	private String id;
 	private String message;
 	

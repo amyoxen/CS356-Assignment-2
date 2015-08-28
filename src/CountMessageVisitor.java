@@ -2,7 +2,9 @@
  * 
  */
 public class CountMessageVisitor implements ComponentVisitor {
+	
 	private int messageTotal;
+	
 	 public CountMessageVisitor(){
 		 messageTotal=0;
 	 }

@@ -2,6 +2,7 @@
  * 
  */
 public class CountGroupVisitor implements ComponentVisitor {
+	
 	private int groupTotal;
 	
 	 public CountGroupVisitor(){

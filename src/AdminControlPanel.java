@@ -129,7 +129,7 @@ public class AdminControlPanel extends JFrame {
 				}	else if(((UserComponent) userTree.getLastSelectedPathComponent()).setNodeIdentity()){
 					JOptionPane.showMessageDialog(null, "Please select a User. ");
 					} else {
-						Follower selectedUser = (Follower)(userTree.getLastSelectedPathComponent());
+						User selectedUser = (User)(userTree.getLastSelectedPathComponent());
 						selectedUser.userPanel = new UserViewPanel(selectedUser, root);
 						selectedUser.userPanel.setVisible(true); 
 					}
@@ -151,7 +151,7 @@ public class AdminControlPanel extends JFrame {
 				else {
 					group = ((User)(userTree.getLastSelectedPathComponent())).getParent();
 				}			
-				Follower addUser = new Follower(id);
+				User addUser = new User(id);
 				addUser.setNodeIdentity();
 				group.addComponent(addUser);
 				treeModel.reload(group);
